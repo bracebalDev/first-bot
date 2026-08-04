@@ -1,5 +1,5 @@
-import src.first_bot.config as cfg
-from src.first_bot.models import Solicitud
+import first_bot.config as cfg
+from first_bot.models import Solicitud
 
 
 class WebSubmitter:

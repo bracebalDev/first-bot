@@ -1,6 +1,6 @@
 from pathlib import Path
 
-import src.first_bot.config as cfg
+import first_bot.config as cfg
 
 EXTENSIONES = {".xlsx", ".xls", ".csv"}
 

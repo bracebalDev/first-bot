@@ -2,13 +2,13 @@ from pathlib import Path
 
 from loguru import logger
 
-import src.first_bot.config as cfg
-from src.first_bot.models import COLUMNAS_ARCHIVO
-from src.first_bot.readers import reader_factory
-from src.first_bot.services import classify, deduplicate, validate
-from src.first_bot.submitter import WebSubmitter
-from src.first_bot.tracker import get_unprocessed_files
-from src.first_bot.reporter import (
+import first_bot.config as cfg
+from first_bot.models import COLUMNAS_ARCHIVO
+from first_bot.readers import reader_factory
+from first_bot.services import classify, deduplicate, validate
+from first_bot.submitter import WebSubmitter
+from first_bot.tracker import get_unprocessed_files
+from first_bot.reporter import (
     guardar_resultados,
     resumen_archivo,
     resumen_global,
@@ -68,7 +68,9 @@ class Orchestrator:
         if duplicados:
             logger.info(f"  Duplicados detectados: {len(duplicados)}")
             for d in duplicados:
-                logger.warning(f"  Duplicado: {d['identificador']} — email: {d['email']}")
+                logger.warning(
+                    f"  Duplicado: {d['identificador']} — email: {d['email']}"
+                )
 
         grupos = classify(unicos)
         logger.info(f"  Clasificación: {len(grupos)} tipo(s)")

@@ -1,6 +1,6 @@
 from pydantic import ValidationError
 
-from src.first_bot.models import Solicitud, row_to_solicitud
+from first_bot.models import Solicitud, row_to_solicitud
 
 
 def validate(df):

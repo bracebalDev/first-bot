@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Union
 
-import src.first_bot.config as cfg
+import first_bot.config as cfg
 
 
 def output_filename(input_path: Union[str, Path]) -> Path:

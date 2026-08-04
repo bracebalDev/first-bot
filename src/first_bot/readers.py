@@ -3,8 +3,8 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.first_bot.exceptions import FileReadError
-from src.first_bot.models import COLUMNAS_ARCHIVO
+from first_bot.exceptions import FileReadError
+from first_bot.models import COLUMNAS_ARCHIVO
 
 
 class BaseReader(ABC):

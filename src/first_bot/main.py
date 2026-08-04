@@ -1,4 +1,4 @@
-from src.first_bot.orchestrator import Orchestrator
+from first_bot.orchestrator import Orchestrator
 
 
 def main():

@@ -4,9 +4,9 @@ from datetime import datetime
 import pandas as pd
 from loguru import logger
 
-import src.first_bot.config as cfg
-from src.first_bot.models import Solicitud
-from src.first_bot.utils import output_filename
+import first_bot.config as cfg
+from first_bot.models import Solicitud
+from first_bot.utils import output_filename
 
 
 def setup_logging():
