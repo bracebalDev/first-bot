@@ -6,7 +6,7 @@ authors = [
     {name = "merzamac",email = "100945727+merzamac@users.noreply.github.com"},
 ]
 dependencies = [
-    "pandas>=2.0",
+    "pandas>=3.0.5",
     "openpyxl>=3.1",
     "pydantic[email]>=2.0",
     "loguru>=0.7",

@@ -3,7 +3,7 @@ from datetime import date
 import pytest
 from pydantic import ValidationError
 
-from src.first_bot.models import Persona, Solicitud, row_to_solicitud
+from first_bot.models import Persona, Solicitud, row_to_solicitud
 
 
 class TestPersona:
@@ -79,13 +79,19 @@ class TestSolicitud:
 class TestRowToSolicitud:
     def test_fila_valida(self):
         row = {
-            "First Name": "Ana", "Last Name": "García",
-            "Company Name": "Corp", "Role in Company": "Dev",
-            "Address": "Calle 1", "Email": "ana@test.com",
+            "First Name": "Ana",
+            "Last Name": "García",
+            "Company Name": "Corp",
+            "Role in Company": "Dev",
+            "Address": "Calle 1",
+            "Email": "ana@test.com",
             "Phone Number": "123",
-            "tipo_solicitud": "soporte", "fecha": "2024-01-01",
-            "prioridad": "alta", "identificador": "SOL-1",
-            "descripcion": "desc", "estado": "pendiente",
+            "tipo_solicitud": "soporte",
+            "fecha": "2024-01-01",
+            "prioridad": "alta",
+            "identificador": "SOL-1",
+            "descripcion": "desc",
+            "estado": "pendiente",
         }
         s = row_to_solicitud(row)
         assert s.persona.first_name == "Ana"
@@ -93,13 +99,19 @@ class TestRowToSolicitud:
 
     def test_fila_email_invalido(self):
         row = {
-            "First Name": "X", "Last Name": "Y",
-            "Company Name": "Z", "Role in Company": "R",
-            "Address": "A", "Email": "malo",
+            "First Name": "X",
+            "Last Name": "Y",
+            "Company Name": "Z",
+            "Role in Company": "R",
+            "Address": "A",
+            "Email": "malo",
             "Phone Number": "1",
-            "tipo_solicitud": "s", "fecha": "2024-01-01",
-            "prioridad": "alta", "identificador": "ID",
-            "descripcion": "D", "estado": "pendiente",
+            "tipo_solicitud": "s",
+            "fecha": "2024-01-01",
+            "prioridad": "alta",
+            "identificador": "ID",
+            "descripcion": "D",
+            "estado": "pendiente",
         }
         with pytest.raises(ValidationError):
             row_to_solicitud(row)
