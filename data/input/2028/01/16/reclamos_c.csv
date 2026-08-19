@@ -1,0 +1,11 @@
+First Name,Last Name,Company Name,Role in Company,Address,Email,Phone Number,tipo_solicitud,fecha,prioridad,identificador,descripcion,estado
+Javier,Cruz,MediCare,Developer,"Calle 154, Ciudad",javier.cruz0@example.com,+1-555-3929,consulta,2028-01-01,alta,SOL-2028000,Descripción de la solicitud 1,pendiente
+Juan,Martínez,SecuWare,Designer,"Calle 136, Ciudad",juan.martínez1@example.com,+1-555-9824,soporte,2028-01-02,baja,SOL-2028001,Descripción de la solicitud 2,en_proceso
+Luis,Pérez,MediCare,Director,"Calle 151, Ciudad",luis.pérez2@example.com,+1-555-4550,reclamo,2028-01-03,media,SOL-2028002,Descripción de la solicitud 3,completada
+Luis,Pérez,DataSys,Designer,"Calle 170, Ciudad",luis.pérez3@example.com,+1-555-3932,reclamo,2028-01-04,alta,SOL-2028003,Descripción de la solicitud 4,completada
+Fernando,Reyes,InnovaSoft,Designer,"Calle 81, Ciudad",fernando.reyes4@example.com,+1-555-7596,soporte,2028-01-05,media,SOL-2028004,Descripción de la solicitud 5,completada
+Carlos,García,MediCare,Developer,"Calle 93, Ciudad",carlos.garcía5@example.com,+1-555-9754,soporte,2028-01-06,media,SOL-2028005,Descripción de la solicitud 6,completada
+Luis,Pérez,LogiTrans,Designer,"Calle 14, Ciudad",luis.pérez6@example.com,+1-555-6857,consulta,2028-01-07,alta,SOL-2028006,Descripción de la solicitud 7,completada
+Laura,González,EduPro,Director,"Calle 46, Ciudad",laura.gonzález7@example.com,+1-555-9244,consulta,2028-01-08,alta,SOL-2028007,Descripción de la solicitud 8,pendiente
+Carlos,García,DataSys,Designer,"Calle 176, Ciudad",carlos.garcía8@example.com,+1-555-7865,soporte,2028-01-09,media,SOL-2028008,Descripción de la solicitud 9,completada
+Juan,Martínez,DataSys,Analyst,"Calle 159, Ciudad",juan.martínez9@example.com,+1-555-1092,sugerencia,2028-01-10,media,SOL-2028009,Descripción de la solicitud 10,pendiente

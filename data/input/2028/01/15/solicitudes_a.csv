@@ -1,0 +1,11 @@
+First Name,Last Name,Company Name,Role in Company,Address,Email,Phone Number,tipo_solicitud,fecha,prioridad,identificador,descripcion,estado
+Ana,Rodríguez,TechCorp,Analyst,"Calle 63, Ciudad",ana.rodríguez0@example.com,+1-555-4657,consulta,2028-01-01,baja,SOL-2028000,Descripción de la solicitud 1,pendiente
+Gabriela,Jiménez,InnovaSoft,Director,"Calle 109, Ciudad",gabriela.jiménez1@example.com,+1-555-1520,soporte,2028-01-02,alta,SOL-2028001,Descripción de la solicitud 2,pendiente
+Sofía,Sánchez,FinServ,Director,"Calle 7, Ciudad",sofía.sánchez2@example.com,+1-555-4257,sugerencia,2028-01-03,alta,SOL-2028002,Descripción de la solicitud 3,en_proceso
+Ricardo,Ruiz,SecuWare,Manager,"Calle 195, Ciudad",ricardo.ruiz3@example.com,+1-555-3615,sugerencia,2028-01-04,media,SOL-2028003,Descripción de la solicitud 4,en_proceso
+Pedro,Hernández,CloudNet,Analyst,"Calle 27, Ciudad",pedro.hernández4@example.com,+1-555-2519,sugerencia,2028-01-05,alta,SOL-2028004,Descripción de la solicitud 5,en_proceso
+Carmen,Rivera,LogiTrans,Analyst,"Calle 12, Ciudad",carmen.rivera5@example.com,+1-555-8527,soporte,2028-01-06,media,SOL-2028005,Descripción de la solicitud 6,pendiente
+Gabriela,Jiménez,SecuWare,Director,"Calle 93, Ciudad",gabriela.jiménez6@example.com,+1-555-4150,soporte,2028-01-07,alta,SOL-2028006,Descripción de la solicitud 7,completada
+Sofía,Sánchez,SecuWare,Manager,"Calle 60, Ciudad",sofía.sánchez7@example.com,+1-555-2654,sugerencia,2028-01-08,media,SOL-2028007,Descripción de la solicitud 8,en_proceso
+Carmen,Rivera,DataSys,Analyst,"Calle 91, Ciudad",carmen.rivera8@example.com,+1-555-4432,reclamo,2028-01-09,baja,SOL-2028008,Descripción de la solicitud 9,completada
+Juan,Martínez,LogiTrans,Developer,"Calle 137, Ciudad",juan.martínez9@example.com,+1-555-5010,consulta,2028-01-10,media,SOL-2028009,Descripción de la solicitud 10,en_proceso

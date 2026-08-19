@@ -1,11 +1,11 @@
 import tempfile
 from pathlib import Path
+from datetime import date
 
 import pytest
 
-from src.first_bot.submitter import WebSubmitter
-from src.first_bot.models import Persona, Solicitud
-from datetime import date
+from first_bot.submitter import WebSubmitter
+from first_bot.models import Persona, Solicitud
 
 
 @pytest.fixture

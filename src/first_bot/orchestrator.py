@@ -1,9 +1,10 @@
 from pathlib import Path
+from typing import Union
 
 from loguru import logger
 
 import first_bot.config as cfg
-from first_bot.models import COLUMNAS_ARCHIVO
+from first_bot.models import COLUMNAS_ARCHIVO, ProcessableInputFile
 from first_bot.readers import reader_factory
 from first_bot.services import classify, deduplicate, validate
 from first_bot.submitter import WebSubmitter
@@ -40,21 +41,29 @@ class Orchestrator:
                 self._procesar_archivo(archivo)
                 procesados += 1
             except Exception as e:
-                logger.exception(f"Error crítico procesando {archivo.name}: {e}")
+                display_name = archivo.path_dir if isinstance(archivo, ProcessableInputFile) else str(archivo)
+                logger.exception(f"Error crítico procesando {display_name}: {e}")
 
         omitidos = total_archivos - procesados
         resumen_global(total_archivos, procesados, omitidos)
 
-    def _procesar_archivo(self, archivo: Path):
-        logger.info(f"Procesando: {archivo.name}")
+    def _procesar_archivo(self, archivo: Union[ProcessableInputFile, Path]):
+        if isinstance(archivo, ProcessableInputFile):
+            file_path = archivo.full_path
+            display_name = archivo.path_dir
+        else:
+            file_path = Path(archivo)
+            display_name = file_path.name
 
-        ext = archivo.suffix
+        logger.info(f"Procesando: {display_name}")
+
+        ext = file_path.suffix
         reader = reader_factory(ext)
-        df = reader.read(archivo)
+        df = reader.read(file_path)
 
         for col in COLUMNAS_ARCHIVO:
             if col not in df.columns:
-                logger.warning(f"Columna '{col}' no encontrada en {archivo.name}")
+                logger.warning(f"Columna '{col}' no encontrada en {display_name}")
 
         total_filas = len(df)
 
@@ -83,7 +92,7 @@ class Orchestrator:
         guardar_resultados(archivo, unicos, duplicados, errores, resultados_submit)
 
         resumen_archivo(
-            filename=archivo.name,
+            filename=display_name,
             total_filas=total_filas,
             validos=len(validos),
             duplicados=len(duplicados),

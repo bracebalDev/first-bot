@@ -1,8 +1,95 @@
 import re
+from dataclasses import dataclass
 from datetime import date
-from typing import Literal
+from pathlib import Path
+from typing import Literal, Self
 
-from pydantic import BaseModel, EmailStr, field_validator, model_validator
+from pydantic import BaseModel, EmailStr, field_validator
+
+
+@dataclass(frozen=True, eq=False)
+class ProcessableFile:
+    """Clase base inmutable para archivos procesables en el bot RPA.
+    
+    Permite la comparación e igualdad basada exclusivamente en `path_dir`
+    (ruta relativa dentro del directorio base), lo que habilita operaciones
+    de conjuntos (e.g. inputs - outputs) entre diferentes tipos de archivos.
+    """
+    year: int
+    month: int
+    day: int
+    date: date
+    path_dir: str
+    full_path: Path
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, ProcessableFile):
+            return self.path_dir == other.path_dir
+        return False
+
+    def __hash__(self) -> int:
+        return hash(self.path_dir)
+
+    @classmethod
+    def from_path(cls, file_path: Path, base_dir: Path) -> Self:
+        """Crea una instancia a partir de la ruta del archivo y el directorio base.
+        
+        Extrae año, mes, día y construye el objeto `date` correspondiente.
+        La estructura esperada es `.../YYYY/MM/DD/archivo.ext`.
+        """
+        resolved_file = file_path.resolve()
+        resolved_base = base_dir.resolve()
+        rel = resolved_file.relative_to(resolved_base)
+        path_dir = rel.as_posix()
+
+        parts = rel.parts
+        if len(parts) >= 4:
+            try:
+                year = int(parts[0])
+                month = int(parts[1])
+                day = int(parts[2])
+                file_date = date(year, month, day)
+            except ValueError as e:
+                raise ValueError(
+                    f"Componentes de fecha no válidos en la ruta '{path_dir}': {e}"
+                ) from e
+        else:
+            match = re.search(r"(\d{4})[\\/](\d{1,2})[\\/](\d{1,2})", path_dir)
+            if match:
+                try:
+                    year = int(match.group(1))
+                    month = int(match.group(2))
+                    day = int(match.group(3))
+                    file_date = date(year, month, day)
+                except ValueError as e:
+                    raise ValueError(
+                        f"Valores de fecha fuera de rango en la ruta '{path_dir}': {e}"
+                    ) from e
+            else:
+                raise ValueError(
+                    f"La ruta '{path_dir}' no cumple con el esquema jerárquico YYYY/MM/DD/archivo"
+                )
+
+        return cls(
+            year=year,
+            month=month,
+            day=day,
+            date=file_date,
+            path_dir=path_dir,
+            full_path=resolved_file,
+        )
+
+
+@dataclass(frozen=True, eq=False)
+class ProcessableInputFile(ProcessableFile):
+    """Representa un archivo de entrada a procesar por el bot."""
+    pass
+
+
+@dataclass(frozen=True, eq=False)
+class ProcessableOutputFile(ProcessableFile):
+    """Representa un archivo de salida ya generado/procesado por el bot."""
+    pass
 
 
 class Persona(BaseModel):

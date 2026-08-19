@@ -1,4 +1,4 @@
-"""Genera 20 filas de prueba en INPUT_PATH como .xlsx y .csv."""
+"""Genera datos de prueba estructurados por fechas en INPUT_PATH como .xlsx y .csv."""
 
 import os
 import random
@@ -35,8 +35,8 @@ PRIORIDADES = ["alta", "media", "baja"]
 ESTADOS = ["pendiente", "en_proceso", "completada"]
 
 
-def generar_datos(n: int = 20) -> list[dict]:
-    random.seed(42)
+def generar_datos(n: int = 20, seed: int = 42) -> list[dict]:
+    random.seed(seed)
     filas = []
     for i in range(n):
         nombre, apellido = random.choice(NOMBRES)
@@ -45,13 +45,13 @@ def generar_datos(n: int = 20) -> list[dict]:
             "Last Name": apellido,
             "Company Name": random.choice(COMPANIAS),
             "Role in Company": random.choice(ROLES),
-            "Address": f"Calle {random.randint(1,200)}, Ciudad",
+            "Address": f"Calle {random.randint(1, 200)}, Ciudad",
             "Email": f"{nombre.lower()}.{apellido.lower()}{i}@example.com",
-            "Phone Number": f"+1-555-{random.randint(1000,9999)}",
+            "Phone Number": f"+1-555-{random.randint(1000, 9999)}",
             "tipo_solicitud": random.choice(TIPOS),
-            "fecha": date(2024, 1, 1 + i % 360).strftime("%Y-%m-%d"),
+            "fecha": date(2028, 1, 1 + i % 28).strftime("%Y-%m-%d"),
             "prioridad": random.choice(PRIORIDADES),
-            "identificador": f"SOL-{2024000 + i}",
+            "identificador": f"SOL-{2028000 + i}",
             "descripcion": f"Descripción de la solicitud {i + 1}",
             "estado": random.choice(ESTADOS),
         })
@@ -59,20 +59,29 @@ def generar_datos(n: int = 20) -> list[dict]:
 
 
 def main():
-    INPUT_PATH.mkdir(parents=True, exist_ok=True)
+    date_dir_1 = INPUT_PATH / "2028" / "01" / "15"
+    date_dir_2 = INPUT_PATH / "2028" / "01" / "16"
+    date_dir_1.mkdir(parents=True, exist_ok=True)
+    date_dir_2.mkdir(parents=True, exist_ok=True)
 
-    datos = generar_datos(20)
-    df = pd.DataFrame(datos)
+    # Lote 1 (2028/01/15)
+    datos_1 = generar_datos(10, seed=42)
+    df_1 = pd.DataFrame(datos_1)
+    csv_1 = date_dir_1 / "solicitudes_a.csv"
+    xlsx_1 = date_dir_1 / "pedidos_b.xlsx"
+    df_1.to_csv(csv_1, index=False)
+    df_1.to_excel(xlsx_1, index=False, engine="openpyxl")
 
-    xlsx_path = INPUT_PATH / "solicitudes_prueba.xlsx"
-    csv_path = INPUT_PATH / "solicitudes_prueba.csv"
+    # Lote 2 (2028/01/16)
+    datos_2 = generar_datos(10, seed=99)
+    df_2 = pd.DataFrame(datos_2)
+    csv_2 = date_dir_2 / "reclamos_c.csv"
+    df_2.to_csv(csv_2, index=False)
 
-    df.to_excel(xlsx_path, index=False, engine="openpyxl")
-    df.to_csv(csv_path, index=False)
-
-    print(f"Generados 20 registros en:")
-    print(f"  {xlsx_path}")
-    print(f"  {csv_path}")
+    print("Archivos de prueba generados en estructura jerárquica:")
+    print(f"  - {csv_1}")
+    print(f"  - {xlsx_1}")
+    print(f"  - {csv_2}")
 
 
 if __name__ == "__main__":

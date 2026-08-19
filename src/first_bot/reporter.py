@@ -1,11 +1,12 @@
 from pathlib import Path
 from datetime import datetime
+from typing import Union
 
 import pandas as pd
 from loguru import logger
 
 import first_bot.config as cfg
-from first_bot.models import Solicitud
+from first_bot.models import ProcessableInputFile, Solicitud
 from first_bot.utils import output_filename
 
 
@@ -22,13 +23,13 @@ def setup_logging():
 
 
 def guardar_resultados(
-    input_path: Path,
+    input_file: Union[ProcessableInputFile, Path],
     unicos: list[Solicitud],
     duplicados: list[dict],
     errores: list[dict],
     resultados_submit: list[dict],
 ):
-    output = output_filename(input_path)
+    output = output_filename(input_file)
     output.parent.mkdir(parents=True, exist_ok=True)
 
     filas: list[dict] = []
@@ -80,7 +81,12 @@ def guardar_resultados(
         })
 
     df_out = pd.DataFrame(filas)
-    df_out.to_csv(output, index=False)
+    
+    if output.suffix.lower() in (".xlsx", ".xls"):
+        df_out.to_excel(output, index=False, engine="openpyxl")
+    else:
+        df_out.to_csv(output, index=False)
+        
     logger.info(f"Resultados guardados en: {output}")
 
 

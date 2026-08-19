@@ -1,7 +1,7 @@
 import pandas as pd
 
-from src.first_bot.services import classify, deduplicate, validate
-from src.first_bot.models import Solicitud
+from first_bot.services import classify, deduplicate, validate
+from first_bot.models import Solicitud
 
 
 def df_valido():
@@ -23,14 +23,14 @@ class TestValidate:
         assert len(errores) == 0
 
     def test_detecta_errores(self, csv_con_errores):
-        from src.first_bot.readers import CsvReader
+        from first_bot.readers import CsvReader
         df = CsvReader().read(csv_con_errores)
         validos, errores = validate(df)
         assert len(validos) == 1
         assert len(errores) == 1
 
     def test_errores_contienen_fila(self, csv_con_errores):
-        from src.first_bot.readers import CsvReader
+        from first_bot.readers import CsvReader
         df = CsvReader().read(csv_con_errores)
         _, errores = validate(df)
         assert "fila" in errores[0]
@@ -40,7 +40,7 @@ class TestValidate:
 class TestDeduplicate:
     def test_sin_duplicados(self):
         from datetime import date
-        from src.first_bot.models import Persona
+        from first_bot.models import Persona
         p1 = Persona(first_name="A", last_name="B", company_name="C",
                      role_in_company="D", address="E", email="a@t.com",
                      phone_number="1")
@@ -60,7 +60,7 @@ class TestDeduplicate:
 
     def test_con_duplicados(self):
         from datetime import date
-        from src.first_bot.models import Persona
+        from first_bot.models import Persona
         p = Persona(first_name="A", last_name="B", company_name="C",
                     role_in_company="D", address="E", email="dup@t.com",
                     phone_number="1")
@@ -80,7 +80,7 @@ class TestDeduplicate:
 class TestClassify:
     def test_agrupa_por_tipo(self):
         from datetime import date
-        from src.first_bot.models import Persona
+        from first_bot.models import Persona
         p1 = Persona(first_name="A", last_name="B", company_name="C",
                      role_in_company="D", address="E", email="a@t.com",
                      phone_number="1")
@@ -104,7 +104,7 @@ class TestClassify:
 
     def test_unico_tipo(self):
         from datetime import date
-        from src.first_bot.models import Persona
+        from first_bot.models import Persona
         p = Persona(first_name="A", last_name="B", company_name="C",
                     role_in_company="D", address="E", email="a@t.com",
                     phone_number="1")

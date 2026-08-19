@@ -1,11 +1,11 @@
 from pathlib import Path
 from datetime import date
-import tempfile
 
 import pandas as pd
 import pytest
 
 from first_bot.config import INPUT_PATH
+from first_bot.models import Persona
 
 
 @pytest.fixture
@@ -14,19 +14,8 @@ def new_solicitud() -> Path:
 
 
 @pytest.fixture
-def temp_input_dir():
-    with tempfile.TemporaryDirectory() as tmpdir:
-        old = Path(INPUT_PATH)
-        import first_bot.config as cfg
-
-        cfg.INPUT_PATH = Path(tmpdir)
-        yield Path(tmpdir)
-        cfg.INPUT_PATH = old
-
-
-@pytest.fixture
-def csv_valido(temp_input_dir):
-    path = temp_input_dir / "valido.csv"
+def csv_valido(tmp_path):
+    path = tmp_path / "valido.csv"
     df = pd.DataFrame(
         [
             {
@@ -51,8 +40,8 @@ def csv_valido(temp_input_dir):
 
 
 @pytest.fixture
-def xlsx_valido(temp_input_dir):
-    path = temp_input_dir / "valido.xlsx"
+def xlsx_valido(tmp_path):
+    path = tmp_path / "valido.xlsx"
     df = pd.DataFrame(
         [
             {
@@ -77,8 +66,8 @@ def xlsx_valido(temp_input_dir):
 
 
 @pytest.fixture
-def csv_con_errores(temp_input_dir):
-    path = temp_input_dir / "errores.csv"
+def csv_con_errores(tmp_path):
+    path = tmp_path / "errores.csv"
     df = pd.DataFrame(
         [
             {
@@ -132,8 +121,6 @@ def persona_data():
 
 @pytest.fixture
 def solicitud_data(persona_data):
-    from first_bot.models import Persona
-
     return {
         "persona": Persona(**persona_data),
         "tipo_solicitud": "soporte",

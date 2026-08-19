@@ -1,9 +1,156 @@
+from dataclasses import FrozenInstanceError
 from datetime import date
+from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
 
-from first_bot.models import Persona, Solicitud, row_to_solicitud
+from first_bot.models import (
+    Persona,
+    ProcessableFile,
+    ProcessableInputFile,
+    ProcessableOutputFile,
+    Solicitud,
+    row_to_solicitud,
+)
+
+
+class TestProcessableFiles:
+    def test_instanciacion_directa(self):
+        full_path = Path("/tmp/data/input/2028/01/15/solicitudes.csv")
+        inp = ProcessableInputFile(
+            year=2028,
+            month=1,
+            day=15,
+            date=date(2028, 1, 15),
+            path_dir="2028/01/15/solicitudes.csv",
+            full_path=full_path,
+        )
+        assert inp.year == 2028
+        assert inp.month == 1
+        assert inp.day == 15
+        assert inp.date == date(2028, 1, 15)
+        assert inp.path_dir == "2028/01/15/solicitudes.csv"
+        assert inp.full_path == full_path
+
+    def test_igualdad_entre_input_y_output(self):
+        inp = ProcessableInputFile(
+            year=2028,
+            month=1,
+            day=15,
+            date=date(2028, 1, 15),
+            path_dir="2028/01/15/solicitudes_a.csv",
+            full_path=Path("/abs/data/input/2028/01/15/solicitudes_a.csv"),
+        )
+        out = ProcessableOutputFile(
+            year=2028,
+            month=1,
+            day=15,
+            date=date(2028, 1, 15),
+            path_dir="2028/01/15/solicitudes_a.csv",
+            full_path=Path("/abs/data/output/2028/01/15/solicitudes_a.csv"),
+        )
+        # Deben ser iguales por compartir path_dir
+        assert inp == out
+        assert out == inp
+        assert hash(inp) == hash(out)
+
+    def test_desigualdad_con_distinto_path_dir(self):
+        inp = ProcessableInputFile(
+            year=2028,
+            month=1,
+            day=15,
+            date=date(2028, 1, 15),
+            path_dir="2028/01/15/solicitudes_a.csv",
+            full_path=Path("/abs/data/input/2028/01/15/solicitudes_a.csv"),
+        )
+        out = ProcessableOutputFile(
+            year=2028,
+            month=1,
+            day=16,
+            date=date(2028, 1, 16),
+            path_dir="2028/01/16/solicitudes_a.csv",
+            full_path=Path("/abs/data/output/2028/01/16/solicitudes_a.csv"),
+        )
+        assert inp != out
+        assert inp != "otro_tipo"
+
+    def test_operacion_diferencia_de_conjuntos(self):
+        inp1 = ProcessableInputFile(
+            year=2028,
+            month=1,
+            day=15,
+            date=date(2028, 1, 15),
+            path_dir="2028/01/15/solicitudes_a.csv",
+            full_path=Path("/abs/data/input/2028/01/15/solicitudes_a.csv"),
+        )
+        inp2 = ProcessableInputFile(
+            year=2028,
+            month=1,
+            day=16,
+            date=date(2028, 1, 16),
+            path_dir="2028/01/16/reclamos_c.csv",
+            full_path=Path("/abs/data/input/2028/01/16/reclamos_c.csv"),
+        )
+        out1 = ProcessableOutputFile(
+            year=2028,
+            month=1,
+            day=15,
+            date=date(2028, 1, 15),
+            path_dir="2028/01/15/solicitudes_a.csv",
+            full_path=Path("/abs/data/output/2028/01/15/solicitudes_a.csv"),
+        )
+
+        inputs = {inp1, inp2}
+        outputs = {out1}
+        pendientes = inputs - outputs
+
+        assert pendientes == {inp2}
+        assert inp1 not in pendientes
+
+    def test_inmutabilidad_frozen(self):
+        inp = ProcessableInputFile(
+            year=2028,
+            month=1,
+            day=15,
+            date=date(2028, 1, 15),
+            path_dir="2028/01/15/solicitudes_a.csv",
+            full_path=Path("/abs/data/input/2028/01/15/solicitudes_a.csv"),
+        )
+        with pytest.raises(FrozenInstanceError):
+            inp.year = 2029
+
+    def test_from_path_valido(self, tmp_path):
+        base_dir = tmp_path / "data" / "input"
+        file_path = base_dir / "2028" / "01" / "15" / "pedidos_b.xlsx"
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        file_path.touch()
+
+        inp = ProcessableInputFile.from_path(file_path, base_dir)
+        assert inp.year == 2028
+        assert inp.month == 1
+        assert inp.day == 15
+        assert inp.date == date(2028, 1, 15)
+        assert inp.path_dir == "2028/01/15/pedidos_b.xlsx"
+        assert inp.full_path == file_path.resolve()
+
+    def test_from_path_invalido_lanza_error(self, tmp_path):
+        base_dir = tmp_path / "data" / "input"
+        file_path = base_dir / "invalido" / "archivo.csv"
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        file_path.touch()
+
+        with pytest.raises(ValueError, match="no cumple con el esquema jerárquico"):
+            ProcessableInputFile.from_path(file_path, base_dir)
+
+    def test_from_path_fecha_invalida_lanza_error(self, tmp_path):
+        base_dir = tmp_path / "data" / "input"
+        file_path = base_dir / "2028" / "02" / "31" / "archivo.csv"
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        file_path.touch()
+
+        with pytest.raises(ValueError):
+            ProcessableInputFile.from_path(file_path, base_dir)
 
 
 class TestPersona:
